@@ -5952,11 +5952,8 @@ MonoBehaviour:
   startingPoint: {x: 0, y: 0, z: 0}
   objective: {x: 0, y: 0, z: 0}
   tilemap: {fileID: 351174319}
-  pintador: {fileID: 11400000, guid: 771e4f04583903a4d96d2247abf3b847, type: 2}
-  camino: {fileID: 11400000, guid: a96bb1547d16bf74cba63db4f5962570, type: 2}
   delay: 0
   canstop: 0
-  canRun: 1
 --- !u!114 &972634673
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5978,10 +5975,10 @@ MonoBehaviour:
   startpoint: {fileID: 972634670}
   endpoint: {fileID: 972634670}
   Heuristicfloodfill: {fileID: 972634674}
-  FloodFillAlg: 0
+  FloodFillAlg: 1
   FloodFillEarlyExit: 0
   DijkstrasAlg: 0
-  HeuristicAlg: 1
+  HeuristicAlg: 0
   HeuristicEarlyExit: 0
   AEstrellaAlg: 0
   AEstrellaEarlyExit: 0
@@ -5997,7 +5994,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbe53d9b82385de4db69db0f214b203c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  range: 3
+  range: 5
   startingPoint: {x: 0, y: 0, z: 0}
   objective: {x: 0, y: 0, z: 0}
   tilemap: {fileID: 351174319}
@@ -6061,7 +6058,7 @@ GameObject:
   - component: {fileID: 1287893024}
   - component: {fileID: 1287893025}
   m_Layer: 0
-  m_Name: Circle
+  m_Name: CalacaChida
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6159,7 +6156,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1364284838}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5df87c1c12aa3504ba865d0714ce251c, type: 3}
   m_Name: 
