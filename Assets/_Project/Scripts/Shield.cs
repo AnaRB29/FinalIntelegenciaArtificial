@@ -4,7 +4,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class Socavon : MonoBehaviour
+public class Shield : MonoBehaviour
 {
     public Queue<Vector3Int> frontier = new();
     public int range;
@@ -18,7 +18,7 @@ public class Socavon : MonoBehaviour
     public bool canstop;
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.A))
+        if (Input.GetKeyDown(KeyCode.E))
         {
             FloodFillStartCoroutine();
         }
@@ -44,8 +44,8 @@ public class Socavon : MonoBehaviour
                 {
                     if (next != startingPoint && next != objective)
                     {
-                        //estas 2 lÃ­neas sirven para las animaciones, son TraslaciÃ³n, RotaciÃ³n y Escala
-                        Matrix4x4 matrix = Matrix4x4.TRS(new Vector3(0, 1f, 0), quaternion.Euler(0, 0, 0), Vector3.one);
+                        //estas 2 líneas sirven para las animaciones, son Traslación, Rotación y Escala
+                        Matrix4x4 matrix = Matrix4x4.TRS(new Vector3(0, 3f, 0), quaternion.Euler(0, 0, 0), Vector3.one);
                         tilemap.SetTransformMatrix(next, matrix);
                     }
                     reached.Add(next);
@@ -79,7 +79,7 @@ public class Socavon : MonoBehaviour
             {
                 if (!reached.set.Contains(next) && tilemap.GetSprite(next) != null)
                 {
-                    Matrix4x4 matrix = Matrix4x4.TRS(new Vector3(0, -0.32f, 0), Quaternion.Euler(0f, 0f, 90f), Vector3.one);
+                    Matrix4x4 matrix = Matrix4x4.TRS(new Vector3(0, 0f, 0), Quaternion.Euler(0f, 0f, 0f), Vector3.one);
                     tilemap.SetTransformMatrix(next, matrix);
                     reached.Add(next);
                     if (Vector3Int.Distance(startingPoint, next) < range)
@@ -147,6 +147,4 @@ public class Socavon : MonoBehaviour
 
         return neighbours;
     }
-
-
 }

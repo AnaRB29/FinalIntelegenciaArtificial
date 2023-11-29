@@ -35,73 +35,14 @@ public class TileSimpleAnimator : MonoBehaviour
             StartCoroutine(AnimationTest(cells[i]));
             yield return new WaitForSeconds(0.05f);
         }
-        /*
-        Coroutine lastCor = null;
-        for(var i = 0; i < cells.Count - 1; i++)
-        {
-            var animHandler = new AnimationHandler();
-            _activeTween.Add(cells[i], animHandler);
-
-            animHandler.MovePos(new Vector3(0, 0, 0), 0.5f);
-
-            lastCor = StartCoroutine(WaitTween(animHandler.tweenPos, animHandler, cells[i]));
-            yield return new WaitForSeconds(0.005f);
-
-            if(i == cells.Count - 1)
-            {
-                Debug.Log("Esperando ultima cor");
-                yield return lastCor;
-            }
-        }
-        
-
-        for (var i = 0; i < cells.Count - 1; i++)
-        {
-            var animHandler = _activeTween[cells[i]];
-
-            animHandler.MovePos(animHandler.originalPos, 0.5f);
-
-            lastCor = StartCoroutine(WaitTween(animHandler.tweenPos, animHandler, cells[i]));
-            yield return new WaitForSeconds(0.04f);
-
-            if (i == cells.Count - 1)
-            {
-                Debug.Log("Esperando ultima cor");
-                yield return lastCor;
-            }
-        }
-
-        for (var i = 0; i < cells.Count - 1; i++)
-        {
-            _activeTween.Remove(cells[i]);
-        }
-        */
     }
 
     private IEnumerator AnimationTest(Vector3Int cell)
     {
-        //init
         var animHandler = new AnimationHandler();
         _activeTween.Add(cell, animHandler);
-        
-        //move
         animHandler.MovePos(new Vector3(0,0,0), 0.5f);
-
         yield return WaitTween(animHandler.tweenPos, animHandler, cell);
-        
-        //rotate
-        /*
-        animHandler.MoveRot(new Vector3(0,90,0), .75f);
-        yield return WaitTween(animHandler.tweenRot, animHandler, cell);
-        */
-        
-        //rotate back
-        /*
-        animHandler.MoveRot(animHandler.originalRot, .75f);
-        yield return WaitTween(animHandler.tweenRot, animHandler, cell);
-        */
-        
-        //move back
         animHandler.MovePos(animHandler.originalPos, 0.5f);
         yield return WaitTween(animHandler.tweenPos, animHandler, cell);
         
