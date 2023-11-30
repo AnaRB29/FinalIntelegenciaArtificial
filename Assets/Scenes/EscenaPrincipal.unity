@@ -6273,7 +6273,7 @@ MonoBehaviour:
   playerTilemap: {fileID: 351174319}
   tileSelector: {fileID: 972634677}
   areaSelector: {fileID: 972634664}
-  speed: 1.5
+  speed: 4
 --- !u!114 &972634679
 MonoBehaviour:
   m_ObjectHideFlags: 0
