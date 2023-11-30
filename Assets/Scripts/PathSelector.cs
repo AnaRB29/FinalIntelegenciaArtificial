@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-[RequireComponent(typeof(TileSelector))]
+[RequireComponent(typeof(TileSelect))]
 public class PathSelector : MonoBehaviour
 {
-    [SerializeField] private TileSelector selector;
+    [SerializeField] private TileSelect selector;
 
     [Header("Draw")]
     [SerializeField] private TileDrawer drawer;
@@ -21,7 +21,7 @@ public class PathSelector : MonoBehaviour
 
     private void Awake()
     {
-        selector ??= GetComponent<TileSelector>();
+        selector ??= GetComponent<TileSelect>();
     }
 
     private void OnSelectedTile(CustomTile tile, Vector3Int pos)

@@ -8,11 +8,13 @@ public class Shield : MonoBehaviour
 {
     public Queue<Vector3Int> frontier = new();
     public int range;
-    public Vector3Int startingPoint;
-    public Vector3Int objective;
+    public Vector3Int objetivo;
+    public Vector3Int startPoint; 
     public Set reached = new Set();
     public Tilemap tilemap;
     public float delay;
+    public Transform calacaChida;
+    public Grid grid;
 
     public Dictionary<Vector3Int, Vector3Int> cameFrom = new();
     public bool canstop;
@@ -22,11 +24,12 @@ public class Shield : MonoBehaviour
         {
             FloodFillStartCoroutine();
         }
+        startPoint = grid.WorldToCell(calacaChida.transform.position);
     }
     public void FloodFillStartCoroutine()
     {
-        frontier.Enqueue(startingPoint);
-        cameFrom.Add(startingPoint, Vector3Int.zero);
+        frontier.Enqueue(startPoint);
+        cameFrom.Add(startPoint, Vector3Int.zero);
         StartCoroutine(FloodFillCoroutine());
     }
 
@@ -37,12 +40,12 @@ public class Shield : MonoBehaviour
             Vector3Int current = frontier.Dequeue();
             Debug.Log(frontier.Count);
             List<Vector3Int> neighbours = GetNeighbours(current);
-            if (current == objective && canstop) break;
+            if (current == objetivo && canstop) break;
             foreach (Vector3Int next in neighbours)
             {
                 if (!reached.set.Contains(next) && tilemap.GetSprite(next) != null)
                 {
-                    if (next != startingPoint && next != objective)
+                    if (next != startPoint && next != objetivo)
                     {
                         //estas 2 líneas sirven para las animaciones, son Traslación, Rotación y Escala
                         Matrix4x4 matrix = Matrix4x4.TRS(new Vector3(0, 3f, 0), quaternion.Euler(0, 0, 0), Vector3.one);
@@ -62,8 +65,8 @@ public class Shield : MonoBehaviour
             yield return new WaitForSeconds(delay);
         }
         Deselect();
-        frontier.Enqueue(startingPoint);
-        cameFrom.Add(startingPoint, Vector3Int.zero);
+        frontier.Enqueue(startPoint);
+        cameFrom.Add(startPoint, Vector3Int.zero);
         StartCoroutine(DownPower());
     }
 
@@ -82,7 +85,7 @@ public class Shield : MonoBehaviour
                     Matrix4x4 matrix = Matrix4x4.TRS(new Vector3(0, 0f, 0), Quaternion.Euler(0f, 0f, 0f), Vector3.one);
                     tilemap.SetTransformMatrix(next, matrix);
                     reached.Add(next);
-                    if (Vector3Int.Distance(startingPoint, next) < range)
+                    if (Vector3Int.Distance(startPoint, next) < range)
                     {
                         frontier.Enqueue(next);
                     }
@@ -96,8 +99,8 @@ public class Shield : MonoBehaviour
             yield return new WaitForSeconds(delay);
         }
         Deselect();
-        frontier.Enqueue(startingPoint);
-        cameFrom.Add(startingPoint, Vector3Int.zero);
+        frontier.Enqueue(startPoint);
+        cameFrom.Add(startPoint, Vector3Int.zero);
         StartCoroutine(ClearPower());
     }
     IEnumerator ClearPower()
@@ -116,7 +119,7 @@ public class Shield : MonoBehaviour
                     Matrix4x4 matrix = Matrix4x4.TRS(new Vector3(0, -0.12f, 0), Quaternion.Euler(0f, 0f, 0f), Vector3.one);
                     tilemap.SetTransformMatrix(next, matrix);
                     reached.Add(next);
-                    if (Vector3Int.Distance(startingPoint, next) < range)
+                    if (Vector3Int.Distance(startPoint, next) < range)
                     {
                         frontier.Enqueue(next);
                     }

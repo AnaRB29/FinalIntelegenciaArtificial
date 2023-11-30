@@ -6,7 +6,7 @@ using UnityEngine.Tilemaps;
 
 public class BreadthFirstSearch : MonoBehaviour
 {
-    [SerializeField] private TileSelector selector;
+    [SerializeField] private TileSelect selector;
     
     [Space]
     [SerializeField] private TileBase defaultTile;

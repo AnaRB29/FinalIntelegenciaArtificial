@@ -4,32 +4,33 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class Socavon : MonoBehaviour
+public class Misilazo : MonoBehaviour
 {
     public Queue<Vector3Int> frontier = new();
     public int range;
-    public Vector3Int startingPoint;
+    public Vector3Int startPoint;
     public Vector3Int objective;
     public Set reached = new Set();
     public Tilemap tilemap;
     public float delay;
-
     public Dictionary<Vector3Int, Vector3Int> cameFrom = new();
     public bool canstop;
+    public Transform calacaChida;
+    public Grid grid;
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.A))
         {
             FloodFillStartCoroutine();
         }
+        startPoint = grid.WorldToCell(calacaChida.transform.position);
     }
     public void FloodFillStartCoroutine()
     {
-        frontier.Enqueue(startingPoint);
-        cameFrom.Add(startingPoint, Vector3Int.zero);
+        frontier.Enqueue(startPoint);
+        cameFrom.Add(startPoint, Vector3Int.zero);
         StartCoroutine(FloodFillCoroutine());
     }
-
     IEnumerator FloodFillCoroutine()
     {
         while (frontier.Count > 0)
@@ -42,7 +43,7 @@ public class Socavon : MonoBehaviour
             {
                 if (!reached.set.Contains(next) && tilemap.GetSprite(next) != null)
                 {
-                    if (next != startingPoint && next != objective)
+                    if (next != startPoint && next != objective)
                     {
                         //estas 2 líneas sirven para las animaciones, son Traslación, Rotación y Escala
                         Matrix4x4 matrix = Matrix4x4.TRS(new Vector3(0, 1f, 0), quaternion.Euler(0, 0, 0), Vector3.one);
@@ -62,15 +63,13 @@ public class Socavon : MonoBehaviour
             yield return new WaitForSeconds(delay);
         }
         Deselect();
-        frontier.Enqueue(startingPoint);
-        cameFrom.Add(startingPoint, Vector3Int.zero);
+        frontier.Enqueue(startPoint);
+        cameFrom.Add(startPoint, Vector3Int.zero);
         StartCoroutine(DownPower());
     }
-
     IEnumerator DownPower()
     {
         Debug.Log("Clear");
-
         while (frontier.Count > 0)
         {
             Vector3Int current = frontier.Dequeue();
@@ -82,7 +81,7 @@ public class Socavon : MonoBehaviour
                     Matrix4x4 matrix = Matrix4x4.TRS(new Vector3(0, -0.32f, 0), Quaternion.Euler(0f, 0f, 90f), Vector3.one);
                     tilemap.SetTransformMatrix(next, matrix);
                     reached.Add(next);
-                    if (Vector3Int.Distance(startingPoint, next) < range)
+                    if (Vector3Int.Distance(startPoint, next) < range)
                     {
                         frontier.Enqueue(next);
                     }
@@ -91,39 +90,35 @@ public class Socavon : MonoBehaviour
                         cameFrom.Add(next, current);
                     }
                 }
-
             }
             yield return new WaitForSeconds(delay);
         }
         Deselect();
-        frontier.Enqueue(startingPoint);
-        cameFrom.Add(startingPoint, Vector3Int.zero);
+        frontier.Enqueue(startPoint);
+        cameFrom.Add(startPoint, Vector3Int.zero);
         StartCoroutine(ClearPower());
     }
     IEnumerator ClearPower()
     {
         Debug.Log("Clear");
-
         while (frontier.Count > 0)
         {
             Vector3Int current = frontier.Dequeue();
             List<Vector3Int> neighbours = GetNeighbours(current);
             foreach (Vector3Int next in neighbours)
             {
-
                 if (!reached.set.Contains(next) && tilemap.GetSprite(next) != null)
                 {
                     Matrix4x4 matrix = Matrix4x4.TRS(new Vector3(0, -0.12f, 0), Quaternion.Euler(0f, 0f, 0f), Vector3.one);
                     tilemap.SetTransformMatrix(next, matrix);
                     reached.Add(next);
-                    if (Vector3Int.Distance(startingPoint, next) < range)
+                    if (Vector3Int.Distance(startPoint, next) < range)
                     {
                         frontier.Enqueue(next);
                     }
                     if (!cameFrom.ContainsKey(next))
                     {
                         cameFrom.Add(next, current);
-
                     }
                 }
             }
@@ -144,9 +139,6 @@ public class Socavon : MonoBehaviour
         neighbours.Add(current + new Vector3Int(0, -1, 0));
         neighbours.Add(current + new Vector3Int(1, 0, 0));
         neighbours.Add(current + new Vector3Int(-1, 0, 0));
-
         return neighbours;
     }
-
-
 }

@@ -8,11 +8,13 @@ public class Animacion2 : MonoBehaviour
 {
     public Queue<Vector3Int> frontier = new();
     public int range;
-    public Vector3Int startingPoint;
-    public Vector3Int objective;
+    public Vector3Int startPoint;
     public Set reached = new Set();
+    public Vector3Int objective;   
     public Tilemap tilemap;
-    public float delay;
+    public float retraso;
+    public Transform calacaChida;
+    public Grid grid;
 
     public Dictionary<Vector3Int, Vector3Int> cameFrom = new();
     public bool canstop;
@@ -22,11 +24,12 @@ public class Animacion2 : MonoBehaviour
         {
             FloodFillStartCoroutine();
         }
+        startPoint = grid.WorldToCell(calacaChida.transform.position);
     }
     public void FloodFillStartCoroutine()
     {
-        frontier.Enqueue(startingPoint);
-        cameFrom.Add(startingPoint, Vector3Int.zero);
+        frontier.Enqueue(startPoint);
+        cameFrom.Add(startPoint, Vector3Int.zero);
         StartCoroutine(FloodFillCoroutine());
     }
 
@@ -42,7 +45,7 @@ public class Animacion2 : MonoBehaviour
             {
                 if (!reached.set.Contains(next) && tilemap.GetSprite(next) != null)
                 {
-                    if (next != startingPoint && next != objective)
+                    if (next != startPoint && next != objective)
                     {
                         //estas 2 líneas sirven para las animaciones, son Traslación, Rotación y Escala
                         Matrix4x4 matrix = Matrix4x4.TRS(new Vector3(0, 1f, 0), quaternion.Euler(0, 0, 0), Vector3.one);
@@ -59,11 +62,11 @@ public class Animacion2 : MonoBehaviour
                     }
                 }
             }
-            yield return new WaitForSeconds(delay);
+            yield return new WaitForSeconds(retraso);
         }
         Deselect();
-        frontier.Enqueue(startingPoint);
-        cameFrom.Add(startingPoint, Vector3Int.zero);
+        frontier.Enqueue(startPoint);
+        cameFrom.Add(startPoint, Vector3Int.zero);
         StartCoroutine(DownPower());
     }
 
@@ -87,7 +90,7 @@ public class Animacion2 : MonoBehaviour
                         yield return null;
                     }
                     reached.Add(next);
-                    if (Vector3Int.Distance(startingPoint, next) < range)
+                    if (Vector3Int.Distance(startPoint, next) < range)
                     {
                         frontier.Enqueue(next);
                     }
@@ -98,11 +101,12 @@ public class Animacion2 : MonoBehaviour
                 }
 
             }
-            yield return new WaitForSeconds(delay);
+            yield return new WaitForSeconds(retraso);
         }
         Deselect();
-        frontier.Enqueue(startingPoint);
-        cameFrom.Add(startingPoint, Vector3Int.zero);
+        frontier.Enqueue(startPoint);
+        cameFrom.Add(startPoint, Vector3Int.zero);
+        StartCoroutine(ClearPower());
 
     }
     IEnumerator ClearPower()
@@ -126,7 +130,7 @@ public class Animacion2 : MonoBehaviour
                         yield return null;
                     }
                     reached.Add(next);
-                    if (Vector3Int.Distance(startingPoint, next) < range)
+                    if (Vector3Int.Distance(startPoint, next) < range)
                     {
                         frontier.Enqueue(next);
                     }
@@ -137,7 +141,7 @@ public class Animacion2 : MonoBehaviour
                     }
                 }
             }
-            yield return new WaitForSeconds(delay);
+            yield return new WaitForSeconds(retraso );
         }
         Deselect();
     }
