@@ -7,15 +7,11 @@ using UnityEngine.Tilemaps;
 public class PathSelector : MonoBehaviour
 {
     [SerializeField] private TileSelect selector;
-
-    [Header("Draw")]
     [SerializeField] private TileDrawer drawer;
     [SerializeField] private CustomTile originTileDraw;
     [SerializeField] private CustomTile objectiveTileDraw;
-
     public delegate void OnMoveSelectionDel(OnMoveSelectionArgs args);
     public event OnMoveSelectionDel OnMoveSelectionDone;
-
     private CustomTile originTile, objectiveTile;
     private Vector3Int originPos, objectivePos;
 
@@ -32,7 +28,6 @@ public class PathSelector : MonoBehaviour
             originTile = null;
             objectiveTile = null;
         }
-        
         if (originTile == null)
         {
             originTile = tile;
@@ -40,11 +35,9 @@ public class PathSelector : MonoBehaviour
             drawer.Draw(pos, originTileDraw);
             return;
         }
-
         objectiveTile = tile;
         objectivePos = pos;
         drawer.Draw(pos, objectiveTileDraw);
-
         OnMoveSelectionDone?.Invoke(new OnMoveSelectionArgs(originTile, objectiveTile, originPos, objectivePos));
     }
 

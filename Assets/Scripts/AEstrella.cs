@@ -28,25 +28,19 @@ public class AEstrella : MonoBehaviour
             FloodFillStartCoroutine();
             canRun = false;
         }
-
     }
     public void FloodFillStartCoroutine()
     {
-
         frontier.Enqueue(startingPoint, 0);
         cameFrom.Add(startingPoint, Vector3Int.zero);
         costSoFar.Add(startingPoint, 0);
-
         StartCoroutine(FloodFillCoroutine());
-
-
     }
     IEnumerator FloodFillCoroutine()
     {
         while (frontier.Count > 0)
         {
             Vector3Int current = frontier.Dequeue();
-            Debug.Log(frontier.Count);
             List<Vector3Int> neighbours = GetNeighbours(current);
             if (earlyExit && current == objective) break;
             foreach (Vector3Int next in neighbours)

@@ -17,15 +17,12 @@ public static class TileMapExtensions
         third.y += 1;
         var fourth = origin;
         fourth.y -= 1;
-
         neighbours.Add(first);
         neighbours.Add(second);
         neighbours.Add(third);
         neighbours.Add(fourth);
-
         if(!includeEmpty)
             neighbours = neighbours.Where(pos => tileMap.GetTile(pos) != null).ToList();
-
         return neighbours;
     }
 

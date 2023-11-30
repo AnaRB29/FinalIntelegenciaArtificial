@@ -4,21 +4,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class BreadthFirstSearch : MonoBehaviour
+public class Busqueda : MonoBehaviour
 {
     [SerializeField] private TileSelect selector;
-    
-    [Space]
     [SerializeField] private TileBase defaultTile;
     [SerializeField] private TileBase originTile;
     [SerializeField] private TileBase objectiveTile;
     [SerializeField] private TileBase fillTile;
     [SerializeField] private TileBase pathToFollowTile;
-
-    [Space]
     [SerializeField] private Tilemap tileMap;
-
-    [Header("Versions")]
     [SerializeField] private Version version = Version.CameFrom;
 
     enum Version{
@@ -28,20 +22,14 @@ public class BreadthFirstSearch : MonoBehaviour
         EndEarly,
         EndEarlyAndFill,
     }
-
     [SerializeField] private bool useHeuristics;
-    
-    [Header("Visual Vars")]
     [SerializeField, Min(0)] private float _secondsPerTileChange;
     [SerializeField, Min(0)] private float _secondsPerNeighbourChange;
-
     private Vector3Int? originPos;
     private Vector3Int? objectivePos;
-
     private Queue<Vector3Int> _frontier;
     private HashSet<Vector3Int> _reached;
     private Dictionary<Vector3Int, Vector3Int?> _cameFrom;
-
     private TileBase CurrentTile=> _isFilled ? defaultTile : fillTile;
     private TileBase AlternativeCurrentTile => _isFilled ? fillTile : defaultTile;
     private bool _isFilled = false;
@@ -49,12 +37,10 @@ public class BreadthFirstSearch : MonoBehaviour
     private void OnSelectTile(TileBase tileSelected, Vector3Int cellPos)
     {
         if (algorithmCor != null) return;
-
         if (originPos == null)
         {
             originPos = cellPos;
             tileMap.SetTile(cellPos, originTile);
-            Debug.Log($"Origen: {cellPos}");
             return;
         }
 
@@ -62,14 +48,10 @@ public class BreadthFirstSearch : MonoBehaviour
         {
             objectivePos = cellPos;
             tileMap.SetTile(cellPos, objectiveTile);
-            Debug.Log($"Origen: {cellPos}");
-
             if(version == Version.JustPoints) return;
         }
-
         if (version == Version.JustPoints)
             ResetPositions();
-
         DoAlgorithim();
     }
 
@@ -103,7 +85,6 @@ public class BreadthFirstSearch : MonoBehaviour
             foreach (var neighbour in tileMap.GetNeighbours(current))
             {
                 if (_reached.Contains(neighbour)) continue;
-                //Si no se ha alcanzado el vecino, se a�ade a la frontera y a los tiles alcanzados
                 AddToFrontier(neighbour);
                 AddToReached(neighbour);
 
@@ -124,7 +105,6 @@ public class BreadthFirstSearch : MonoBehaviour
         void AddToReached(Vector3Int pos)
         {
             _reached.Add(pos);
-            //tileMap.SetTile(pos, GetInfectedTile());
         }
     }
 
@@ -141,7 +121,6 @@ public class BreadthFirstSearch : MonoBehaviour
             foreach (var neighbour in tileMap.GetNeighbours(current))
             {
                 if (_cameFrom.ContainsKey(neighbour)) continue;
-                //Si no se ha alcanzado el vecino, se a�ade a la frontera y a los tiles de donde viene
                 AddToFrontier(neighbour);
                 AddToCameFrom(neighbour, current);
                 if(neighbour == objectivePos && (version == Version.EndEarly || version == Version.EndEarlyAndFill))
@@ -168,7 +147,6 @@ public class BreadthFirstSearch : MonoBehaviour
         void AddToCameFrom(Vector3Int current, Vector3Int? from)
         {
             _cameFrom.Add(current, from);
-            //tileMap.SetTile(pos, GetInfectedTile());
         }
     }
 
@@ -177,7 +155,6 @@ public class BreadthFirstSearch : MonoBehaviour
         ResetPositions();
         _isFilled = !_isFilled;
         algorithmCor = null;
-        Debug.Log("End Algorithm");
     }
     
     private int Heuristic(Vector3Int a, Vector3Int b)
@@ -190,7 +167,6 @@ public class BreadthFirstSearch : MonoBehaviour
         ResetPositions(pathToFollowTile, pathToFollowTile);
         _isFilled = !_isFilled;
         algorithmCor = null;
-        Debug.Log("End Algorithm");
     }
 
     private void PaintFollowPathAndEndAlgorithm()
@@ -213,9 +189,7 @@ public class BreadthFirstSearch : MonoBehaviour
         {
             tileMap.SetTile(cell, pathToFollowTile);
         }
-
         EndAlgorithmWithPath();
-        Debug.Log("End Algorithm");
     }
 
 
@@ -223,10 +197,8 @@ public class BreadthFirstSearch : MonoBehaviour
     {
         origintile ??= CurrentTile;
         objectiveTile ??= CurrentTile;
-
         tileMap.SetTile(originPos.Value, origintile);
         tileMap.SetTile(objectivePos.Value, objectiveTile);
-
         originPos = null;
         objectivePos = null;
     }

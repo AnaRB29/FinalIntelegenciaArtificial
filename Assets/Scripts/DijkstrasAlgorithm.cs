@@ -7,21 +7,13 @@ using UnityEngine.Tilemaps;
 public class DijkstrasAlgorithm : MonoBehaviour
 {
     [FormerlySerializedAs("moveSelector")] [SerializeField] private PathSelector pathSelector;
-
-    [Space]
     [SerializeField] private TileBase defaultTile;
     [SerializeField] private TileBase originTile;
     [SerializeField] private TileBase objectiveTile;
     [SerializeField] private TileBase fillTile;
     [SerializeField] private TileBase pathToFollowTile;
-
-    [Space]
     [SerializeField] private TileDrawer tileDrawer;
-
-    [Space]
     [SerializeField] private Tilemap tileMap;
-
-    [Header("Versions")]
     [SerializeField] private Version version = Version.Weight;
     enum Version
     {
@@ -29,37 +21,26 @@ public class DijkstrasAlgorithm : MonoBehaviour
         Heuristics,
         AStar
     }
-
     [SerializeField] private bool _paintIt;
-
     [SerializeField] private bool _endEarly = true;
-
-    [Header("Visual Vars")]
     [SerializeField, Min(0)] private float _secondsPerTileChange;
     [SerializeField, Min(0)] private float _secondsPerNeighbourChange;
-
     private Vector3Int _originPos, _objectivePos;
-
     private PriorityQueue<Vector3Int> _frontier;
     private Dictionary<Vector3Int, Vector3Int?> _cameFrom;
     private Dictionary<Vector3Int, int> _costSoFar;
-
     private void OnPathSelection(OnMoveSelectionArgs args)
     {
         if (algorithmCor != null) return;
-
         _originPos = args.originPos;
         _objectivePos = args.objectivePos;
-
         DoAlgorithim();
     }
-
     private void DoAlgorithim()
     {
         _frontier = new PriorityQueue<Vector3Int>();
         _cameFrom = new Dictionary<Vector3Int, Vector3Int?>();
         _costSoFar = new Dictionary<Vector3Int, int>();
-
         algorithmCor = StartCoroutine(CameFromAlgorithmCoroutine());
     }
 
@@ -99,26 +80,20 @@ public class DijkstrasAlgorithm : MonoBehaviour
 
                     _frontier.Enqueue(next, priority);
                     _cameFrom.Add(next, current);
-                    //Si se quiere pintar, pintalo
                     if (_paintIt)
                     {
                         tileDrawer.Draw(next, fillTile);
                         yield return new WaitForSeconds(_secondsPerNeighbourChange);
                     }
                 }
-
-                //Si el vecino es el final, se  termina
                 if (next == _objectivePos && _endEarly)
                 {
                     endEarly = true;
                     break;
                 }
-                //yield return new WaitForSeconds(_secondsPerTileChange);
             }
 
             if (endEarly) break;
-
-            //yield return new WaitForSeconds(_secondsPerNeighbourChange);
         }
 
         PaintFollowPathAndEndAlgorithm();

@@ -15,7 +15,6 @@ public class Animacion2 : MonoBehaviour
     public float retraso;
     public Transform calacaChida;
     public Grid grid;
-
     public Dictionary<Vector3Int, Vector3Int> cameFrom = new();
     public bool canstop;
     private void Update()
@@ -38,7 +37,6 @@ public class Animacion2 : MonoBehaviour
         while (frontier.Count > 0)
         {
             Vector3Int current = frontier.Dequeue();
-            Debug.Log(frontier.Count);
             List<Vector3Int> neighbours = GetNeighbours(current);
             if (current == objective && canstop) break;
             foreach (Vector3Int next in neighbours)
@@ -47,7 +45,6 @@ public class Animacion2 : MonoBehaviour
                 {
                     if (next != startPoint && next != objective)
                     {
-                        //estas 2 líneas sirven para las animaciones, son Traslación, Rotación y Escala
                         Matrix4x4 matrix = Matrix4x4.TRS(new Vector3(0, 1f, 0), quaternion.Euler(0, 0, 0), Vector3.one);
                         tilemap.SetTransformMatrix(next, matrix);
                     }
@@ -72,8 +69,6 @@ public class Animacion2 : MonoBehaviour
 
     IEnumerator DownPower()
     {
-        Debug.Log("Clear");
-
         while (frontier.Count > 0)
         {
             Vector3Int current = frontier.Dequeue();
@@ -111,15 +106,12 @@ public class Animacion2 : MonoBehaviour
     }
     IEnumerator ClearPower()
     {
-        Debug.Log("Clear");
-
         while (frontier.Count > 0)
         {
             Vector3Int current = frontier.Dequeue();
             List<Vector3Int> neighbours = GetNeighbours(current);
             foreach (Vector3Int next in neighbours)
             {
-
                 if (!reached.set.Contains(next) && tilemap.GetSprite(next) != null)
                 {
                     for (int i = 360; i <= 0; i -= 5)

@@ -15,7 +15,6 @@ public class Shield : MonoBehaviour
     public float delay;
     public Transform calacaChida;
     public Grid grid;
-
     public Dictionary<Vector3Int, Vector3Int> cameFrom = new();
     public bool canstop;
     private void Update()
@@ -38,7 +37,6 @@ public class Shield : MonoBehaviour
         while (frontier.Count > 0)
         {
             Vector3Int current = frontier.Dequeue();
-            Debug.Log(frontier.Count);
             List<Vector3Int> neighbours = GetNeighbours(current);
             if (current == objetivo && canstop) break;
             foreach (Vector3Int next in neighbours)
@@ -47,7 +45,6 @@ public class Shield : MonoBehaviour
                 {
                     if (next != startPoint && next != objetivo)
                     {
-                        //estas 2 líneas sirven para las animaciones, son Traslación, Rotación y Escala
                         Matrix4x4 matrix = Matrix4x4.TRS(new Vector3(0, 3f, 0), quaternion.Euler(0, 0, 0), Vector3.one);
                         tilemap.SetTransformMatrix(next, matrix);
                     }
@@ -72,8 +69,6 @@ public class Shield : MonoBehaviour
 
     IEnumerator DownPower()
     {
-        Debug.Log("Clear");
-
         while (frontier.Count > 0)
         {
             Vector3Int current = frontier.Dequeue();
@@ -105,8 +100,6 @@ public class Shield : MonoBehaviour
     }
     IEnumerator ClearPower()
     {
-        Debug.Log("Clear");
-
         while (frontier.Count > 0)
         {
             Vector3Int current = frontier.Dequeue();
@@ -126,7 +119,6 @@ public class Shield : MonoBehaviour
                     if (!cameFrom.ContainsKey(next))
                     {
                         cameFrom.Add(next, current);
-
                     }
                 }
             }
